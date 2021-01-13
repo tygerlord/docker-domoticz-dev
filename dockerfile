@@ -45,8 +45,11 @@ ENV HOME="/config"
 
 WORKDIR /app
 
-RUN  useradd pi && \
-	usermod -aG dialout pi && \
+env USER_PASSWD "pi:docker!"
+
+RUN useradd pi && \
+	usermod -aG dialout,sudo pi && \
+	echo "$USER_PASSWD" | chpasswd && \
 	echo "******** build domoticz ********" && \
 	git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/domoticz/domoticz && \
 	cd domoticz && \
@@ -64,9 +67,10 @@ RUN  useradd pi && \
 	mv server_cert.pem /usr/share/domoticz && \
 	mkdir -p /config/backups && \
 	mkdir -p /config/plugins && \
-	cp /usr/share/domoticz/History.txt /config  && \
+	cp /usr/share/domoticz/History.txt /config && \
 	cp /usr/share/domoticz/License.txt /config && \
 	cp /usr/share/domoticz/server_cert.pem /config && \
+	chown -R pi:pi /config && \
 	cp domoticz /usr/bin/domoticz
 
 
@@ -77,7 +81,7 @@ EXPOSE 1443
 
 USER pi
 
-CMD ["/usr/bin/domoticz", \ 
+ENTRYPOINT ["/usr/bin/domoticz", \ 
 	"-approot /usr/share/domoticz", \
 	"-dbase /config/domoticz.db", \
 	"-noupdate", \
