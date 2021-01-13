@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN export DEBIAN_FRONTEND=noninteractive && \ 
 	apt-get update && \
-	apt-get install -y --no-install-recommends make gcc g++ libssl-dev git rsync && \
+	apt-get install -y --no-install-recommends make gcc g++ libssl-dev git rsync \
 		libcurl4-gnutls-dev libusb-dev python3-dev zlib1g-dev libcereal-dev liblua5.3-dev uthash-dev \
 	apt-get install -y --no-install-recommends wget sudo python3-setuptools python3-pip python3-dev \
 	cd /app && \
