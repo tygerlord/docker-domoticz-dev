@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN export DEBIAN_FRONTEND=noninteractive \ 
 	&& apt-get update \
-	&& apt-get install -y --no-install-recommends make gcc g++ libssl-dev git rsync \
+	&& apt-get install -y --no-install-recommends bash make gcc g++ libssl-dev git rsync \
 		libcurl4-gnutls-dev libusb-dev python3-dev zlib1g-dev libcereal-dev liblua5.3-dev uthash-dev \
 	&& apt-get install -y --no-install-recommends wget sudo python3-setuptools python3-pip python3-dev \
 	&& cd /app \
@@ -15,6 +15,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& cd WiringPi \
 	&& ./build \
 	&& cd .. \
+	&& rm -fr WiringPi \
 	&& echo "******** build cmake ********" \
 	&& wget https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0.tar.gz \
 	&& tar -xvf cmake-3.17.0.tar.gz \
@@ -35,7 +36,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& ./b2 stage threading=multi link=static --with-thread --with-system \
 	&& ./b2 install threading=multi link=static --with-thread --with-system \
 	&& cd .. \
-	&& rm -fr boost* 
+	&& rm -fr boost* \
+	&& apt-get clean
 
 FROM docker-domoticz-builder
 
@@ -52,13 +54,30 @@ RUN  useradd pi \
 	&& cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt \
 	&& make \
 	&& echo "******** install domoticz ********" \
-	&& mkdir -p /usr/share/domoticz/backups \
-	&& mkdir -p /usr/share/domoticz/plugins 
+	&& mkdir -p /usr/share/domoticz \
+	&& mv www /usr/share/domoticz \
+	&& mv dzVents /usr/share/domoticz \
+	&& mv Config /usr/share/domoticz \
+	&& mv scripts /usr/share/domoticz \
+	&& mv History.txt /usr/share/domoticz \
+	&& mv License.txt /usr/share/domoticz \
+	&& mv server_cert.pem /usr/share/domoticz \
+	&& mkdir -p /config/backups \
+	&& mkdir -p /config/plugins \
+	&& cp /usr/share/domoticz/History.txt /config \
+	&& cp /usr/share/domoticz/Licence.txt /config \
+	&& cp /usr/share/domoticz/server_cert.pem /config \
+	&& cp domoticz /usr/bin/domoticz
 
+
+
+EXPOSE 8080
+EXPOSE 6144
+EXPOSE 1443
 
 USER pi
 
-CMD ["/bin/sh"]
+CMD ["/bin/bash"]
 
 
 
