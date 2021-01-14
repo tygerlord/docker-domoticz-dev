@@ -44,6 +44,8 @@ ENV HOME="/config"
 
 WORKDIR /app
 
+COPY entrypoint.sh /app
+
 env USER_PASSWD "pi:docker!"
 
 RUN useradd pi && \
@@ -56,20 +58,24 @@ RUN useradd pi && \
 	cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
 	make && \
 	echo "******** install domoticz ********" && \
-	mkdir -p /usr/share/domoticz && \
-	mv www /usr/share/domoticz  && \
-	mv dzVents /usr/share/domoticz && \
-	mv Config /usr/share/domoticz && \
-	mv scripts /usr/share/domoticz && \
-	mv History.txt /usr/share/domoticz && \
-	mv License.txt /usr/share/domoticz && \
-	mv server_cert.pem /usr/share/domoticz && \
+	mv www /app  && \
+	mv dzVents /app && \
+	mv Config /app && \
+	mv scripts /app && \
+	mv History.txt /app && \
+	mv License.txt /app && \
+	mv server_cert.pem /app && \
+	rm -f scripts/update_domoticz &&\
+	rm -f scripts/restart_domoticz &&\
+	rm -f scripts/download_domoticz &&\
 	mkdir -p /config/backups && \
 	mkdir -p /config/plugins && \
-	cp /usr/share/domoticz/History.txt /config && \
-	cp /usr/share/domoticz/License.txt /config && \
-	cp /usr/share/domoticz/server_cert.pem /config && \
+	cp /app/History.txt /config && \
+	cp /app/License.txt /config && \
+	cp /app/server_cert.pem /config && \
+	chown -R pi:pi /app && \
 	chown -R pi:pi /config && \
+	chmod +x /app/entrypoint.sh \
 	cp domoticz /usr/bin/domoticz
 
 
@@ -80,14 +86,8 @@ EXPOSE 1443
 
 USER pi
 
-ENTRYPOINT ["/usr/bin/domoticz", \ 
-	"-approot /usr/share/domoticz", \
-	"-dbase /config/domoticz.db", \
-	"-noupdate", \
-	"-sslwww 1443", \
-	"-sslcert /config/server_cert.pem", \
-	"-userdata /config/" \
-]
+ENTRYPOINT [ "/app/entrypoint.sh" ]
+
 
 
 
