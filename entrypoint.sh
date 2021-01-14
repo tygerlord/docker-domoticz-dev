@@ -1,7 +1,6 @@
 #!/bin/sh
 
-/usr/bin/domoticz \ 
-	-approot /usr/share/domoticz \
+/usr/bin/domoticz -approot /app \
 	-dbase /config/domoticz.db \
 	-noupdate  \
 	-sslwww 1443  \

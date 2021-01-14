@@ -75,7 +75,7 @@ RUN useradd pi && \
 	cp /app/server_cert.pem /config && \
 	chown -R pi:pi /app && \
 	chown -R pi:pi /config && \
-	chmod +x /app/entrypoint.sh \
+	chmod +x /app/entrypoint.sh && \
 	cp domoticz /usr/bin/domoticz
 
 
