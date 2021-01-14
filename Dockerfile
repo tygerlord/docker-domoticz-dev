@@ -52,7 +52,7 @@ RUN useradd pi && \
 	usermod -aG dialout,sudo pi && \
 	echo "$USER_PASSWD" | chpasswd && \
 	echo "******** build domoticz ********" && \
-	git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/domoticz/domoticz && \
+	git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/tygerlord/domoticz && \
 	cd domoticz && \
 	git pull && \
 	cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
