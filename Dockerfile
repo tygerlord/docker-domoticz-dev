@@ -12,7 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 	echo "******** build wiringPi ********" && \
 	git clone https://github.com/WiringPi/WiringPi && \
 	cd WiringPi && \
-	./build && \
+	./build debian && \
 	cd .. && \
 	rm -fr WiringPi && \
 	echo "******** build cmake ********" && \
