@@ -30,4 +30,6 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      -
+        name: buildx
         run: docker buildx build --platform linux/arm/v7 --load -t tygerlord/domoticz . 
