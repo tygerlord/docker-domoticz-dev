@@ -5,7 +5,7 @@ WORKDIR /app
 ENV HOME="/config"
 
 COPY entrypoint.sh /app
-COPY fake_config.txt /boot/config.txt
+COPY boot/* /boot/
 
 env USER_PASSWD "pi:docker!"
 
