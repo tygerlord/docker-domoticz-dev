@@ -14,7 +14,7 @@ on:
 
 jobs:
   buildx:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-rolling
     steps:
       -
         name: Set up QEMU
