@@ -1,4 +1,4 @@
-FROM tygerlord/domoticz-builder
+FROM tygerlord/domoticz-builder:latest
 
 WORKDIR /app
 
@@ -9,14 +9,24 @@ COPY boot/* /boot/
 
 env USER_PASSWD "pi:docker!"
 
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && echo "I'm building for $TARGETPLATFORM" \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends make gcc g++ libssl-dev git rsync \
+ 	libcurl4-gnutls-dev libusb-dev python3-dev zlib1g-dev libcereal-dev liblua5.3-dev uthash-dev \
+ 	wget sudo python3-setuptools python3-pip python3-dev \
+	libboost-dev libboost-thread-dev libboost-system-dev libboost-atomic-dev libboost-regex-dev libboost-chrono-dev
+
 RUN echo "******** build wiringPi  ********" \
  && groupadd -g 997 gpio \
  && git clone https://github.com/WiringPi/WiringPi \
  && cd WiringPi \
  && ./build \
  && cp /usr/local/bin/gpio /usr/bin/gpio \
+ && chmod +s /usr/bin/gpio \
  && cd .. \
  && rm -fr WiringPi 
+
 
 RUN useradd pi \
  && usermod -aG dialout,sudo,gpio pi \
