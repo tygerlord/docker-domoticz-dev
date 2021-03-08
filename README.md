@@ -1,3 +1,8 @@
+
+# ARCHIVED
+
+I switch to Home Assistant
+
 # docker-domoticz-dev
 Docker image to build domoticz for raspberrypi
 
